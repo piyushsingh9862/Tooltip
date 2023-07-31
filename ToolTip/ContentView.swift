@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var obj : TooltipViewModel
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -15,6 +16,7 @@ struct ContentView: View {
                 .foregroundColor(.accentColor)
             Text("Hello, world!")
         }
+        .environmentObject(obj)
         .padding()
     }
 }

@@ -15,8 +15,10 @@ struct SecondScreenView: View {
     
     @EnvironmentObject private var viewModel: TooltipViewModel
     
-    var body: some View {
-        GeometryReader { geometry in
+    var body: some View
+    {
+        GeometryReader
+        { geometry in
             VStack {
                 HStack {
                     Button("Button 1") {
@@ -33,7 +35,6 @@ struct SecondScreenView: View {
                         GeometryReader { buttonGeometry in
                             Color.clear.onAppear {
                                 updateButtonFrame(index: 0, frame: buttonGeometry.frame(in: .global))
-//                                displayTooltip2(for: "Button 1", buttonIndex: 0, frame: buttonGeometry.frame(in: .global))
                             }
                         }
                         )
@@ -54,7 +55,6 @@ struct SecondScreenView: View {
                         GeometryReader { buttonGeometry in
                             Color.clear.onAppear {
                                 updateButtonFrame(index: 1, frame: buttonGeometry.frame(in: .global))
-//                                displayTooltip2(for: "Button 2", buttonIndex: 1, frame: buttonGeometry.frame(in: .global))
                             }
                         })
                 }
@@ -75,7 +75,6 @@ struct SecondScreenView: View {
                         GeometryReader { buttonGeometry in
                             Color.clear.onAppear {
                                 updateButtonFrame(index: 2, frame: buttonGeometry.frame(in: .global))
-//                                displayTooltip2(for: "Button 3", buttonIndex: 2, frame: buttonGeometry.frame(in: .global))
                             }
                         }
                     )
@@ -97,7 +96,6 @@ struct SecondScreenView: View {
                             GeometryReader { buttonGeometry in
                                 Color.clear.onAppear {
                                     updateButtonFrame(index: 3, frame: buttonGeometry.frame(in: .global))
-//                                    displayTooltip2(for: "Button 4", buttonIndex: 3, frame: buttonGeometry.frame(in: .global))
                                 }
                             }
                         )
@@ -117,7 +115,6 @@ struct SecondScreenView: View {
                             GeometryReader { buttonGeometry in
                                 Color.clear.onAppear {
                                     updateButtonFrame(index: 4, frame: buttonGeometry.frame(in: .global))
-//                                    displayTooltip2(for: "Button 5", buttonIndex: 4, frame: buttonGeometry.frame(in: .global))
                                 }
                             }
                         )
@@ -129,13 +126,12 @@ struct SecondScreenView: View {
                 TooltipView(parameters: viewModel.parameters) : nil
             )
         }
-        .onAppear{
+        .onAppear {
            
             print("Onappear \(viewModel.parameters.selectedTargetElement) \(viewModel.parameters.tooltipTargetElementIndex)")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                     displayTooltip2(for: viewModel.parameters.selectedTargetElement, buttonIndex: viewModel.parameters.tooltipTargetElementIndex)
             }
-//            displayTooltip3(for: viewModel.parameters.selectedTargetElement,viewModel.parameters.tooltipTargetElementIndex)
         }
     }
     
@@ -153,11 +149,20 @@ struct SecondScreenView: View {
         let targetCenter = CGPoint(x: targetFrame.midX, y: targetFrame.midY)
         
         viewModel.parameters.tooltipPosition = CGPoint(x: targetCenter.x-100, y: targetCenter.y-40)
-        
-//        let tooltipX = min(max(targetCenter.x - viewModel.parameters.tooltipWidth / 2, 0), geometry.size.width - viewModel.parameters.tooltipWidth)
-//        let tooltipY = min(max(targetCenter.y, 0), geometry.size.height - viewModel.parameters.tooltipHeight)
 
-//        viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
+        if targetFrame.midY >= 790{ // For bottom buttons (Button 4 and Button 5)
+            let tooltipX = targetFrame.midX - 100
+            let tooltipY = targetFrame.midY - 170
+            viewModel.parameters.arrowPositionY = tooltipY
+            viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
+        } else { // For other buttons (Button 1, Button 2, and Button 3)
+            let tooltipX = targetFrame.midX - 100
+            let tooltipY = targetFrame.midY - 50
+            viewModel.parameters.arrowPositionY = tooltipY
+            viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
+        }
+
+        viewModel.parameters.selectedTargetElement = targetElement
         
         viewModel.parameters.selectedTargetElement = targetElement
         
@@ -171,18 +176,22 @@ struct SecondScreenView: View {
         }
         
         let targetFrame = buttonFrames[buttonIndex]
-//        let targetCenter = CGPoint(x: targetFrame.midX, y: targetFrame.midY-40)
         
-        let targetCenter = CGPoint(x: targetFrame.midX, y: targetFrame.midY)
+
         
-        viewModel.parameters.tooltipPosition = CGPoint(x: targetCenter.x-100, y: targetCenter.y-40)
+        if targetFrame.midY >= 790{ // For bottom buttons (Button 4 and Button 5)
+            let tooltipX = targetFrame.midX - 100
+            let tooltipY = targetFrame.midY - 170
+            viewModel.parameters.arrowPositionY = tooltipY
+            viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
+        } else { // For other buttons (Button 1, Button 2, and Button 3)
+            let tooltipX = targetFrame.midX - 100
+            let tooltipY = targetFrame.midY - 50
+            viewModel.parameters.arrowPositionY = tooltipY
+            viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
+        }
 
         viewModel.parameters.selectedTargetElement = targetElement
-
-//        let tooltipX = min(max(targetCenter.x - viewModel.parameters.tooltipWidth / 2, 0), geometry.size.width - viewModel.parameters.tooltipWidth)
-//        let tooltipY = min(max(targetCenter.y, 0), geometry.size.height - viewModel.parameters.tooltipHeight)
-
-//        viewModel.parameters.tooltipPosition = CGPoint(x: tooltipX, y: tooltipY)
     }
 }
 

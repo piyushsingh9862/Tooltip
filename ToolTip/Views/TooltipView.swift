@@ -12,16 +12,26 @@ import SwiftUI
 
 
 struct ArrowShape: Shape {
+    var isArrowPointingUp: Bool // Add a parameter to control the arrow's direction
+    
+    // Define the path of the arrow shape within the given rectangle
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let width = rect.width
         let height = rect.height
-
-        path.move(to: CGPoint(x: width / 2, y: 0))
-        path.addLine(to: CGPoint(x: 0, y: height))
-        path.addLine(to: CGPoint(x: width, y: height))
-        path.closeSubpath()
-
+        
+        if isArrowPointingUp { // If the arrow is pointing upwards
+            path.move(to: CGPoint(x: width / 2, y: 0))
+            path.addLine(to: CGPoint(x: 0, y: height))
+            path.addLine(to: CGPoint(x: width, y: height))
+            path.closeSubpath()
+        } else { // If the arrow is pointing downwards
+            path.move(to: CGPoint(x: width / 2, y: height))
+            path.addLine(to: CGPoint(x: 0, y: 0))
+            path.addLine(to: CGPoint(x: width, y: 0))
+            path.closeSubpath()
+        }
+        
         return path
     }
 }
@@ -39,11 +49,6 @@ struct TooltipView: View {
                     .font(.system(size: parameters.textSize))
                     .foregroundColor(parameters.textColor)
                     .padding()
-//                    .fixedSize(horizontal: false, vertical: true) // Allow the text to wrap
-//                    .frame(minWidth: 0, maxWidth: .infinity) // Set minimum and maximum width to allow wrapping
-//                    .fixedSize(horizontal: false, vertical: true) // Add this line
-//                    .ignoresSafeArea()
-                    
 
                 // If you want to support an image inside the tooltip, you can add it here
             }
@@ -52,10 +57,15 @@ struct TooltipView: View {
             .frame(width: parameters.tooltipWidth, height: parameters.tooltipHeight)
             .position(x: parameters.tooltipPosition.x + parameters.tooltipWidth / 2, y: parameters.tooltipPosition.y + parameters.tooltipHeight / 2)
             .overlay(
-                        ArrowShape()
+                ArrowShape(isArrowPointingUp: parameters.arrowPositionY < 620)
                             .fill(parameters.backgroundColor)
                             .frame(width: parameters.arrowWidth, height: parameters.arrowHeight)
-                            .position(x: parameters.tooltipPosition.x + parameters.tooltipWidth / 2, y: parameters.tooltipPosition.y + parameters.tooltipHeight - 77)
+                            .position(
+                                x: parameters.tooltipPosition.x + parameters.tooltipWidth / 2,
+                                y: parameters.arrowPositionY > 620 ?
+                                    parameters.tooltipPosition.y - parameters.tooltipHeight + 177 :
+                                    parameters.tooltipPosition.y + parameters.tooltipHeight - 77
+                            )
                     )
         }
 
@@ -68,3 +78,4 @@ struct TooltipView_Previews: PreviewProvider {
             .environmentObject(TooltipViewModel())
     }
 }
+

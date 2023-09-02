@@ -21,8 +21,9 @@ struct TooltipParameters {
     var arrowHeight: CGFloat = 8.0
 //    var tooltipPosition: CGPoint = .zero
     var tooltipPosition: CGPoint = CGPoint(x: -1000, y: -1000)
-//    var tooltipPosition: CGPoint = CGPoint(x: 100, y: 300)
+    var arrowPositionY: CGFloat = .zero
+//    var tooltipPosition: CGPoint = CGPoint(x: 100, y: 500)
+//    var arrowPositionY: CGFloat = 500
     var tooltipHeight: CGFloat = 100.0
     var padding: CGFloat = 8.0
-   
 }

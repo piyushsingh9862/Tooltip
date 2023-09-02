@@ -16,6 +16,7 @@ struct FirstScreenView: View {
     var body: some View {
         
         VStack {
+            Spacer()
             Form {
                     Picker("Target Element", selection: $viewModel.parameters.selectedTargetElement) {
                         Text("Button 1").tag("Button 1")
@@ -23,11 +24,9 @@ struct FirstScreenView: View {
                         Text("Button 3").tag("Button 3")
                         Text("Button 4").tag("Button 4")
                         Text("Button 5").tag("Button 5")
-                        // Add other target elements here
                         Spacer()
                     }
                     TextField("Tooltip Text", text: $viewModel.parameters.tooltipText)
-                    //            Stepper("Text Size: \(Int(viewModel.parameters.textSize))", value: $viewModel.parameters.textSize, in: 12...30, step: 2)
                     
                     HStack {
                         Text("Text Size:")
@@ -39,7 +38,6 @@ struct FirstScreenView: View {
                     
                     ColorPicker("Text Color", selection: $viewModel.parameters.textColor)
                     ColorPicker("Background Color", selection: $viewModel.parameters.backgroundColor)
-                    //            Stepper("Corner Radius: \(Int(viewModel.parameters.cornerRadius))", value: $viewModel.parameters.cornerRadius, in: 0...20)
                     HStack {
                         Text("Corner Radius:")
                         TextField("Corner Radius", value: $viewModel.parameters.cornerRadius, formatter: NumberFormatter())
@@ -61,20 +59,16 @@ struct FirstScreenView: View {
                     Button("Render Tooltip") {
                         viewModel.renderTooltip()
                     }
-                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.all)
-//                .frame(width: geometry.size.width, height: geometry.size.height)
-                .sheet(isPresented: $viewModel.isSecondScreenPresented) {
-                    SecondScreenView()
-                        .environmentObject(viewModel)
-                }
+            }
+            .edgesIgnoringSafeArea(.all)
+            .sheet(isPresented: $viewModel.isSecondScreenPresented) {
+                SecondScreenView()
+                    .environmentObject(viewModel)
+            }
             .edgesIgnoringSafeArea(.all)
             .onChange(of: viewModel.parameters.selectedTargetElement) { newValue in
-                viewModel.selectedBtn = newValue
-    //            viewModel.inx  =
                 viewModel.updateTooltipTargetElementIndex()
-        }
+            }
         }
         
     }
